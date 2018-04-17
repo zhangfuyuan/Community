@@ -1,0 +1,63 @@
+<!--
+  Generated template for the B7Page page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>意见反馈</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <div class="form">
+    <ion-list inset>
+      <ion-item>
+        <ion-label class="label disabled">反馈单号</ion-label>
+        <ion-input type="text" disabled="true" [value]="form.code"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">投诉人</ion-label>
+        <ion-input type="text"
+                   placeholder="请输入投诉人姓名"
+                   [(ngModel)]="form.proposer"
+                   [disabled]="form.isApplied"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">联系方式</ion-label>
+        <ion-input type="number"
+                   placeholder="请输入投诉人联系方式"
+                   [(ngModel)]="form.proposer"
+                   [disabled]="form.isApplied"></ion-input>
+      </ion-item>
+
+      <ion-item class="kind-box">
+        <ion-label class="label">投诉类别</ion-label>
+        <ion-select [(ngModel)]="form.kind" placeholder="请选择" cancelText="取消" okText="确定" [disabled]="form.isApplied">
+          <ion-option value="工程报修">客服</ion-option>
+          <ion-option value="加班空调">工程</ion-option>
+          <ion-option value="IC卡">秩序安全</ion-option>
+          <ion-option value="社区活动">其他</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">反馈内容</ion-label>
+        <ion-textarea placeholder="请说明申请的事务内容及原由..."
+                      class="textarea"
+                      [(ngModel)]="form.reason"
+                      [disabled]="form.isApplied"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <div padding><button ion-button full>提交</button></div>
+  </div>
+
+</ion-content>

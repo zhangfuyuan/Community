@@ -1,0 +1,87 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>用户批量导入</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="导入列表">
+        导入列表
+      </ion-segment-button>
+      <ion-segment-button value="用户数据">
+        用户数据
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab center bottom *ngIf="pet !== '用户数据'" (tap)="pet='用户数据'">
+    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'导入列表'">
+      <ion-item *ngIf="items.length === 0">
+        <p text-center>暂无导入内容！</p>
+      </ion-item>
+
+      <ion-item *ngIf="items.length > 0">
+        <ion-thumbnail item-start>
+        <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Ruby</h2>
+      </ion-item>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'用户数据'">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">用户编号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.code"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">用户名称</ion-label>
+          <ion-input type="text"
+                     placeholder="请输入社区名称"
+                     [(ngModel)]="form.proposer"
+                     [disabled]="form.isApplied"></ion-input>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">所属社区</ion-label>
+          <ion-select [(ngModel)]="form.kind" placeholder="请选择" cancelText="取消" okText="确定" [disabled]="form.isApplied">
+            <ion-option value="社区1">社区1</ion-option>
+            <ion-option value="社区2">社区2</ion-option>
+            <ion-option value="社区3">社区3</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">权限设置</ion-label>
+          <ion-select [(ngModel)]="form.kind" placeholder="请选择" cancelText="取消" okText="确定" [disabled]="form.isApplied">
+            <ion-option value="权限1">权限1</ion-option>
+            <ion-option value="权限2">权限2</ion-option>
+            <ion-option value="权限3">权限3</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">备注</ion-label>
+          <ion-textarea placeholder="请输入备注内容..."
+                        class="textarea"
+                        [(ngModel)]="form.reason"
+                        [disabled]="form.isApplied"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button full>提交</button></div>
+    </div>
+  </div>
+
+</ion-content>

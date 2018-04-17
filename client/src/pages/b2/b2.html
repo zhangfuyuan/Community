@@ -1,0 +1,135 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>入驻申请</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="申请列表">
+        申请列表
+      </ion-segment-button>
+      <ion-segment-button value="申请操作">
+        申请操作
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab right bottom *ngIf="global.userInfo && global.userInfo.identity === 'user' && pet !== '申请操作'">
+    <button ion-fab><ion-icon name="arrow-dropleft"></ion-icon></button>
+    <ion-fab-list side="left">
+      <button ion-fab color="dark" (tap)="changeAction('add')"><ion-icon name="add"></ion-icon></button>
+      <button ion-fab color="dark" (tap)="changeAction('edit')"><ion-icon name="create"></ion-icon></button>
+      <button ion-fab color="dark" (tap)="changeAction('remove')"><ion-icon name="remove"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'申请列表'" radio-group [(ngModel)]="curApplicationIndex" (ionChange)="changeCurApplication(curApplicationIndex)">
+      <ng-container *ngIf="applicationItems.length === 0">
+        <ion-item>
+          <p text-center>暂无申请！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="applicationItems.length > 0">
+        <ion-item *ngFor="let app of applicationItems; let i = index;">
+          <ion-label>
+            <h2>{{app.kind }}</h2>
+            <p>· 申请编号：{{app.applicationId}}</p>
+            <p>· 申请人：{{app.proposer}}</p>
+            <p>· 入驻社区：{{app.b2.enterCommunity}}</p>
+            <p>· 工单状态：{{app.status==='1'?'审批中':(app.status==='-1'?'被驳回':(app.status==='2'?'已通过':'已处理'))}}</p>
+            <p>· 工单事务：{{app.remark}}</p>
+            <p>· 审批人：{{app.approver}}</p>
+            <p>· 申请时间：{{app.applicationTime | date : 'yyyy-MM-dd hh:mm'}}</p>
+            <p>· 申请资料：
+              <img width="200" height="200"
+                   [src]="app.b2.materialImg" alt="资料图片待上传..."
+                   (tap)="openImg(app.b2.materialImg)" style="position: relative; z-index: 1;" />
+            </p>
+          </ion-label>
+          <ion-radio [value]="i"></ion-radio>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'申请操作'">
+      <ng-container *ngIf="!curApplicationDetail">
+        <p text-center>请选择需要操作的申请！</p>
+      </ng-container>
+
+      <ng-container *ngIf="curApplicationDetail">
+        <ion-list inset>
+          <ion-item>
+            <ion-label class="label disabled">申请编号</ion-label>
+            <ion-input type="text" disabled="true" [value]="form.applicationId"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label disabled">业务种类</ion-label>
+            <ion-input type="text" [(ngModel)]="form.kind" disabled="true"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label disabled">申请人</ion-label>
+            <ion-input type="text" [(ngModel)]="form.proposer" disabled="true"></ion-input>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='user' || form.status==='2' }">入驻社区</ion-label>
+            <ion-select [(ngModel)]="form.b2.enterCommunity"
+                        placeholder="请选择入驻社区..."
+                        cancelText="取消"
+                        okText="确定"
+                        [disabled]="global.userInfo.identity !== 'user' || form.status==='2'">
+              <ion-option value="社区1">社区1</ion-option>
+              <ion-option value="社区2">社区2</ion-option>
+              <ion-option value="社区3">社区3</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='user' || form.status==='2' }">申请原由</ion-label>
+            <ion-textarea placeholder="请说明申请的事务内容及原由..."
+                          class="textarea"
+                          [(ngModel)]="form.remark"
+                          [disabled]="global.userInfo.identity!=='user' || form.status==='2'"></ion-textarea>
+          </ion-item>
+
+          <ion-item class="img-box">
+            <span item-start [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='user' || form.status==='2' }">申请资料</span>
+            <ng-container *ngIf="materialImgUri">
+              <img width="200" height="200" [src]="materialImgUri" alt="资料图片待上传..." />
+            </ng-container>
+            <ng-container *ngIf="!materialImgUri">
+              <img style="width: 200px; height: 200px; border: 1px solid rgba(7, 17, 27, 0.1);" />
+            </ng-container>
+            <button ion-button round (tap)="openCamera()"
+                    [disabled]="global.userInfo.identity!=='user' || form.status==='2'">拍照上传</button>
+          </ion-item>
+        </ion-list>
+
+        <ng-container *ngIf="global.userInfo.identity === 'user'  && form.status !== '2'">
+          <div padding>
+            <button ion-button full (tap)="postDetail(action)">
+              <span *ngIf="action === 'add'">新增申请</span>
+              <span *ngIf="action === 'edit'">提交修改</span>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="global.userInfo.identity !== 'user' && form.status==='1'">
+          <div padding><button ion-button full (tap)="approve('2')">审批通过</button></div>
+          <div padding margin-bottom><button ion-button full color="danger" (tap)="approve('-1')">驳回申请</button></div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+</ion-content>

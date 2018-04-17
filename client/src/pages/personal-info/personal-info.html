@@ -1,0 +1,111 @@
+<ion-header>
+
+  <div class="navbar">
+    <div class="title-box">
+      <div class="toolbar-content-md">
+        <ion-title class="ion-title" text-center>个人中心</ion-title>
+      </div>
+
+      <!-- A4：工单及公告消息红点提醒 -->
+      <ion-buttons end (tap)="switchPage('A4')">
+        <button class="msg-btn bar-button bar-button-md bar-button-default bar-button-default-md" ion-button icon-only>
+          <ion-icon class="msg-icon" name="mail">
+            <ion-badge class="msg-badge" color="danger">{{msgNum > 0 ? msgNum : ''}}</ion-badge>
+          </ion-icon>
+        </button>
+      </ion-buttons>
+    </div>
+
+    <div class="info" #info>
+      <div class="info-cont" *ngIf="!isLogin">
+        <div class="avatar"><img src="assets/imgs/lazy-img.jpg" width="80" height="80" alt="头像"></div>
+
+        <div class="text">
+          <button class="login-btn" color="light" ion-button outline (tap)="switchPage('Entry')">
+            <span>登</span><span>录</span>
+          </button>
+          <div class="tip">登录后可查看我的个人信息</div>
+        </div>
+      </div>
+
+      <div class="info-cont" *ngIf="isLogin">
+        <div class="avatar"><img src="assets/imgs/lazy-img.jpg" width="80" height="80" alt="头像"></div>
+
+        <div class="text">
+          <div class="nickname">{{global.userInfo.username}}</div>
+          <div class="identity">所属社区: {{global.userInfo.community}} &nbsp;&nbsp; 用户身份: {{global.userInfo.identity}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-header>
+
+
+<ion-content id="personalCont" class="ion-content" (ionScroll)="scrollHandler($event)">
+
+  <ion-item-group>
+    <ion-item-divider color="light">基础管理</ion-item-divider>
+    <!-- C4:用户登录、修改密码及找回密码功能 -->
+    <ion-item (tap)="switchPage('C4')">
+      修改或找回密码
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider color="light">权限管理</ion-item-divider>
+
+    <!-- C1 -->
+    <ion-item (tap)="switchPage('C1')">
+      <h2>banner维护</h2>
+      <p>· banner的编辑与修改</p>
+      <p>· banner的发布</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+
+    <!-- C2 -->
+    <ion-item (tap)="switchPage('C2')">
+      <h2>社区信息管理</h2>
+      <p>· 支持多个社区创建</p>
+      <p>· 社区信息修改及查询</p>
+      <p>· 社区属性、权限设置及修改</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+
+    <!-- C3 -->
+    <ion-item (tap)="switchPage('C3')">
+      <h2>用户信息维护</h2>
+      <p>· 用户信息的增删改查</p>
+      <p>· 用户权限设置</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+
+    <!-- C5 -->
+    <ion-item (tap)="switchPage('C5')">
+      <h2>用户批量导入</h2>
+      <p>· 用户数据的批量导入</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+
+    <!-- C6 -->
+    <ion-item (tap)="switchPage('C6')">
+      <h2>商家信息维护</h2>
+      <p>· 商家信息增删改查</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+
+    <!-- C7 -->
+    <ion-item (tap)="switchPage('C7')">
+      <h2>商家批量导入</h2>
+      <p>· 商家数据批量导入</p>
+      <ion-icon class="opacity-icon" name="ios-arrow-forward" item-end></ion-icon>
+    </ion-item>
+  </ion-item-group>
+
+  <div class="login-logout" padding>
+    <button ion-button full *ngIf="!isLogin" (tap)="switchPage('Entry')">登录</button>
+    <button ion-button color="danger" full *ngIf="isLogin" (tap)="logout()">登出</button>
+  </div>
+
+</ion-content>

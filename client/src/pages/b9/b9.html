@@ -1,0 +1,145 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>会议室申请</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="申请列表">
+        申请列表
+      </ion-segment-button>
+      <ion-segment-button value="申请操作">
+        申请操作
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab center bottom *ngIf="pet !== '申请操作'" (tap)="pet='申请操作'">
+    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'申请列表'">
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Ruby</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Oscar</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Ruby</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Oscar</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Ruby</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Oscar</h2>
+      </ion-item>
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="assets/imgs/lazy-img.jpg">
+        </ion-thumbnail>
+        <h2>Oscar</h2>
+      </ion-item>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'申请操作'">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">申请单号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.code"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">申请人</ion-label>
+          <ion-input type="text"
+                     placeholder="请输入申请人姓名"
+                     [(ngModel)]="form.proposer"
+                     [disabled]="form.isApplied"></ion-input>
+        </ion-item>
+
+        <ion-item class="time-box">
+          <ion-label class="label">开始日期</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD"
+                        placeholder="请选择日期"
+                        [(ngModel)]="form.startDate"
+                        cancelText="取消"
+                        doneText="确定"
+                        [disabled]="form.isApplied">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-item class="time-box">
+          <ion-label class="label">开始时间</ion-label>
+          <ion-datetime displayFormat="HH:mm"
+                        placeholder="请选择时间"
+                        [(ngModel)]="form.startTime"
+                        cancelText="取消"
+                        doneText="确定"
+                        [disabled]="form.isApplied">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-item class="time-box">
+          <ion-label class="label">结束日期</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD"
+                        placeholder="请选择日期"
+                        [(ngModel)]="form.endDate"
+                        cancelText="取消"
+                        doneText="确定"
+                        [disabled]="form.isApplied">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-item class="time-box">
+          <ion-label class="label">结束时间</ion-label>
+          <ion-datetime displayFormat="HH:mm"
+                        placeholder="请选择时间"
+                        [(ngModel)]="form.endTime"
+                        cancelText="取消"
+                        doneText="确定"
+                        [disabled]="form.isApplied">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">申请原由</ion-label>
+          <ion-textarea placeholder="请说明申请的事务内容及原由..."
+                        class="textarea"
+                        [(ngModel)]="form.reason"
+                        [disabled]="form.isApplied"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button full>提交</button></div>
+    </div>
+  </div>
+
+</ion-content>

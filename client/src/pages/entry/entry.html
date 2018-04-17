@@ -1,0 +1,48 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>登录</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <p class="tip" padding text-center>没有注册的账号，将以首次登录输入的账号与密码为准！</p>
+
+  <div class="form">
+    <ion-list inset>
+      <ion-item>
+        <ion-label class="label">账号</ion-label>
+        <ion-input type="tel"
+                   pattern="[0-9]{11}"
+                   placeholder="请输入11位手机号码"
+                   clearInput
+                   [(ngModel)]="form.username"
+                   (keyup)="passwordFocus($event.keyCode)"
+                   (ionChange)="checkUsername($event.value)" autocomplete="on" #username></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="label">密码</ion-label>
+        <ion-input type="password"
+                   placeholder="请输入6位数字服务密码"
+                   clearInput
+                   [(ngModel)]="form.password"
+                   (keyup)="loginFocus($event.keyCode)"
+                   (ionChange)="checkPassword($event.value)" #password></ion-input>
+      </ion-item>
+
+      <ion-item no-lines>
+        <label item-right>记住密码</label>
+        <ion-toggle [(ngModel)]="isSavePwd"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div padding>
+    <button ion-button full (tap)="login()" [disabled]="!usernameIsCheck || !passwordIsCheck || isPop">登录</button>
+  </div>
+</ion-content>
