@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>工单打印表</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+
+    <table width="413" height="732" border="1" cellspacing="0" style="border-collapse: collapse;"
+           bordercolor="#000" cellpadding="0" bordercolorlight="#000" bordercolordark="#FFF">
+        <thead>
+            <tr>
+                <th colspan="2">工单打印表</th>
+            </tr>
+        </thead>
+
+        <tbody align="center">
+            <tr>
+                <td >工单编号</td>
+                <td><%= workOrderId || '666' %></td>
+            </tr>
+            <tr>
+                <td>业务种类</td>
+                <td><%= kind %></td>
+            </tr>
+            <tr>
+                <td>工单状态</td>
+                <td><%= status %></td>
+            </tr>
+            <tr>
+                <td>工单评价</td>
+                <td><%= evaluate %></td>
+            </tr>
+            <tr>
+                <td>申请人</td>
+                <td><%= proposer %></td>
+            </tr>
+            <tr>
+                <td>审批人</td>
+                <td><%= approver %></td>
+            </tr>
+            <tr>
+                <td>申请时间</td>
+                <td><%= time %></td>
+            </tr>
+            <tr>
+                <td>业务内容</td>
+                <td><%= remark %></td>
+            </tr>
+            <tr>
+                <td>所属社区</td>
+                <td><%= community %></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
