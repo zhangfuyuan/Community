@@ -20,125 +20,94 @@
 
 <ion-content>
 
-  <ion-fab center bottom *ngIf="pet !== '申请操作'" (tap)="pet='申请操作'">
-    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  <ion-fab right bottom *ngIf="global.userInfo && global.userInfo.identity === 'user' && pet !== '申请操作'">
+    <button ion-fab><ion-icon name="arrow-dropleft"></ion-icon></button>
+    <ion-fab-list side="left">
+      <button ion-fab color="dark" (tap)="changeAction('add')"><ion-icon name="add"></ion-icon></button>
+      <button ion-fab color="dark" (tap)="changeAction('edit')"><ion-icon name="create"></ion-icon></button>
+      <button ion-fab color="dark" (tap)="changeAction('remove')"><ion-icon name="remove"></ion-icon></button>
+    </ion-fab-list>
   </ion-fab>
 
   <div class="container" [ngSwitch]="pet">
-    <ion-list *ngSwitchCase="'申请列表'">
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Ruby</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Oscar</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Ruby</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Oscar</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Ruby</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Oscar</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="assets/imgs/lazy-img.jpg">
-        </ion-thumbnail>
-        <h2>Oscar</h2>
-      </ion-item>
+    <ion-list *ngSwitchCase="'申请列表'" radio-group [(ngModel)]="curApplicationIndex" (ionChange)="changeCurApplication(curApplicationIndex)">
+      <ng-container *ngIf="applicationItems.length === 0">
+        <ion-item>
+          <p text-center>暂无申请！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="applicationItems.length > 0">
+        <ion-item *ngFor="let app of applicationItems; let i = index;">
+          <ion-label>
+            <h2>{{app.kind }}</h2>
+            <p>· 申请编号：{{app.applicationId}}</p>
+            <p>· 申请人：{{app.proposer}}</p>
+            <p>· 所属社区：{{app.community}}</p>
+            <p>· 工单状态：{{app.status==='1'?'审批中':(app.status==='-1'?'被驳回':(app.status==='2'?'已通过':'已处理'))}}</p>
+            <p>· 工单事务：{{app.remark}}</p>
+            <p>· 续约地址：{{app.b4.address}}</p>
+            <p>· 审批人：{{app.approver}}</p>
+            <p>· 申请时间：{{app.applicationTime | date : 'yyyy-MM-dd hh:mm'}}</p>
+          </ion-label>
+          <ion-radio [value]="i"></ion-radio>
+        </ion-item>
+      </ng-container>
     </ion-list>
 
     <div class="form" *ngSwitchCase="'申请操作'">
-      <ion-list inset>
-        <ion-item>
-          <ion-label class="label disabled">申请单号</ion-label>
-          <ion-input type="text" disabled="true" [value]="form.code"></ion-input>
-        </ion-item>
+      <ng-container *ngIf="!curApplicationDetail">
+        <p text-center>请选择需要操作的申请！</p>
+      </ng-container>
 
-        <ion-item>
-          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">申请人</ion-label>
-          <ion-input type="text"
-                     placeholder="请输入申请人姓名"
-                     [(ngModel)]="form.proposer"
-                     [disabled]="form.isApplied"></ion-input>
-        </ion-item>
+      <ng-container *ngIf="curApplicationDetail">
+        <ion-list inset>
+          <ion-item>
+            <ion-label class="label disabled">申请编号</ion-label>
+            <ion-input type="text" disabled="true" [value]="form.applicationId"></ion-input>
+          </ion-item>
 
-        <ion-item class="time-box">
-          <ion-label class="label">开始日期</ion-label>
-          <ion-datetime displayFormat="YYYY-MM-DD"
-                        placeholder="请选择日期"
-                        [(ngModel)]="form.startDate"
-                        cancelText="取消"
-                        doneText="确定"
-                        [disabled]="form.isApplied">
-          </ion-datetime>
-        </ion-item>
+          <ion-item>
+            <ion-label class="label disabled">业务种类</ion-label>
+            <ion-input type="text" [(ngModel)]="form.kind" disabled="true"></ion-input>
+          </ion-item>
 
-        <ion-item class="time-box">
-          <ion-label class="label">开始时间</ion-label>
-          <ion-datetime displayFormat="HH:mm"
-                        placeholder="请选择时间"
-                        [(ngModel)]="form.startTime"
-                        cancelText="取消"
-                        doneText="确定"
-                        [disabled]="form.isApplied">
-          </ion-datetime>
-        </ion-item>
+          <ion-item>
+            <ion-label class="label disabled">申请人</ion-label>
+            <ion-input type="text" [(ngModel)]="form.proposer" disabled="true"></ion-input>
+          </ion-item>
 
-        <ion-item class="time-box">
-          <ion-label class="label">结束日期</ion-label>
-          <ion-datetime displayFormat="YYYY-MM-DD"
-                        placeholder="请选择日期"
-                        [(ngModel)]="form.endDate"
-                        cancelText="取消"
-                        doneText="确定"
-                        [disabled]="form.isApplied">
-          </ion-datetime>
-        </ion-item>
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='user' || form.status==='2' }">续约地址</ion-label>
+            <ion-input type="text"
+                       placeholder="请输入续约地址..."
+                       [(ngModel)]="form.b4.address"
+                       [disabled]="global.userInfo.identity!=='user' || form.status==='2'"></ion-input>
+          </ion-item>
 
-        <ion-item class="time-box">
-          <ion-label class="label">结束时间</ion-label>
-          <ion-datetime displayFormat="HH:mm"
-                        placeholder="请选择时间"
-                        [(ngModel)]="form.endTime"
-                        cancelText="取消"
-                        doneText="确定"
-                        [disabled]="form.isApplied">
-          </ion-datetime>
-        </ion-item>
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='user' || form.status==='2' }">申请原由</ion-label>
+            <ion-textarea placeholder="请说明申请的事务内容及原由..."
+                          class="textarea"
+                          [(ngModel)]="form.remark"
+                          [disabled]="global.userInfo.identity!=='user' || form.status==='2'"></ion-textarea>
+          </ion-item>
+        </ion-list>
 
-        <ion-item>
-          <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">申请原由</ion-label>
-          <ion-textarea placeholder="请说明申请的事务内容及原由..."
-                        class="textarea"
-                        [(ngModel)]="form.reason"
-                        [disabled]="form.isApplied"></ion-textarea>
-        </ion-item>
-      </ion-list>
+        <ng-container *ngIf="global.userInfo.identity === 'user'  && form.status !== '2'">
+          <div padding>
+            <button ion-button full (tap)="postDetail(action)">
+              <span *ngIf="action === 'add'">新增申请</span>
+              <span *ngIf="action === 'edit'">提交修改</span>
+            </button>
+          </div>
+        </ng-container>
 
-      <div padding><button ion-button full>提交</button></div>
+        <ng-container *ngIf="global.userInfo.identity !== 'user' && form.status==='1'">
+          <div padding><button ion-button full (tap)="approve('2')">审批通过</button></div>
+          <div padding margin-bottom><button ion-button full color="danger" (tap)="approve('-1')">驳回申请</button></div>
+        </ng-container>
+      </ng-container>
     </div>
   </div>
 
