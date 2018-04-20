@@ -256,9 +256,12 @@ export class B1Page {
 
       if (res.status === 200) {
         this.workOrderItems[this.curWorkOrderIndex].status = reply;
+        this.workOrderItems[this.curWorkOrderIndex].approver = this.global.userInfo.username;
         this.pet = '工单列表';
         this.curWorkOrderDetail.status = reply;
         this.form.status = reply;
+        this.curWorkOrderDetail.approver = this.global.userInfo.username;
+        this.form.approver = this.global.userInfo.username;
       }
     });
   }

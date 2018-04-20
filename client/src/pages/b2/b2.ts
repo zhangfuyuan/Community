@@ -266,9 +266,12 @@ export class B2Page {
 
       if (res.status === 200) {
         this.applicationItems[this.curApplicationIndex].status = reply;
+        this.applicationItems[this.curApplicationIndex].approver = this.global.userInfo.username;
         this.pet = '申请列表';
         this.curApplicationDetail.status = reply;
         this.form.status = reply;
+        this.curApplicationDetail.approver = this.global.userInfo.username;
+        this.form.approver = this.global.userInfo.username;
       }
     });
   }

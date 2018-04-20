@@ -492,5 +492,47 @@ router.post('/approve_application', function(req, res, next) {
     });
 });
 
+/******************************************************* 投诉类 *******************************************************/
+
+/* GET 投诉列表 */
+router.get('/advise', function(req, res, next) {
+    let reqCommunity = req.query.community;
+
+    AdviseModel.find({ "community": reqCommunity }).sort({ "applicationId": -1 }).exec(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "获取投诉列表成功",
+            data: doc
+        })
+    });
+});
+
+/* POST 投诉 - 增：new + save() -> doc返回对象 */
+router.post('/add_advise', function(req, res, next) {
+    let reqDetail = req.body.detail,
+        adviseModel = new AdviseModel(reqDetail);
+
+    adviseModel.save(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "提交建议成功",
+            data: doc
+        })
+    });
+});
 
 module.exports = router;

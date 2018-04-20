@@ -1,9 +1,4 @@
-<!--
-  Generated template for the B7Page page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
@@ -15,49 +10,55 @@
 
 <ion-content>
 
-  <div class="form">
-    <ion-list inset>
-      <ion-item>
-        <ion-label class="label disabled">反馈单号</ion-label>
-        <ion-input type="text" disabled="true" [value]="form.code"></ion-input>
-      </ion-item>
+  <ng-container *ngIf="global.userInfo && global.userInfo.identity === 'user'">
+    <div class="form">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">反馈单号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.adviseId"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">投诉人</ion-label>
-        <ion-input type="text"
-                   placeholder="请输入投诉人姓名"
-                   [(ngModel)]="form.proposer"
-                   [disabled]="form.isApplied"></ion-input>
-      </ion-item>
+        <ion-item>
+          <ion-label class="label disabled">投诉人</ion-label>
+          <ion-input type="text" [(ngModel)]="form.proposer" disabled="true"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">联系方式</ion-label>
-        <ion-input type="number"
-                   placeholder="请输入投诉人联系方式"
-                   [(ngModel)]="form.proposer"
-                   [disabled]="form.isApplied"></ion-input>
-      </ion-item>
+        <ion-item>
+          <ion-label class="label">联系方式</ion-label>
+          <ion-input type="number" placeholder="请输入您的联系方式..." [(ngModel)]="form.contact"></ion-input>
+        </ion-item>
 
-      <ion-item class="kind-box">
-        <ion-label class="label">投诉类别</ion-label>
-        <ion-select [(ngModel)]="form.kind" placeholder="请选择" cancelText="取消" okText="确定" [disabled]="form.isApplied">
-          <ion-option value="工程报修">客服</ion-option>
-          <ion-option value="加班空调">工程</ion-option>
-          <ion-option value="IC卡">秩序安全</ion-option>
-          <ion-option value="社区活动">其他</ion-option>
-        </ion-select>
-      </ion-item>
+        <ion-item class="kind-box">
+          <ion-label class="label">投诉类别</ion-label>
+          <ion-select [(ngModel)]="form.kind" placeholder="请选择类型..." cancelText="取消" okText="确定">
+            <ion-option value="客服">客服</ion-option>
+            <ion-option value="工程">工程</ion-option>
+            <ion-option value="秩序安全">秩序安全</ion-option>
+            <ion-option value="其他">其他</ion-option>
+          </ion-select>
+        </ion-item>
 
-      <ion-item>
-        <ion-label [ngClass]="{ 'label': true, 'disabled': form.isApplied }">反馈内容</ion-label>
-        <ion-textarea placeholder="请说明申请的事务内容及原由..."
-                      class="textarea"
-                      [(ngModel)]="form.reason"
-                      [disabled]="form.isApplied"></ion-textarea>
+        <ion-item>
+          <ion-label class="label">反馈内容</ion-label>
+          <ion-textarea placeholder="请说明投诉的内容或建议..." class="textarea" [(ngModel)]="form.content"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button full (tap)="postDetail()">提交</button></div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="global.userInfo && global.userInfo.identity !== 'user'">
+    <ion-list>
+      <ion-item *ngFor="let advise of adviseItems; let i = index;">
+        <h2>{{advise.kind }}</h2>
+        <h3>{{advise.community}}</h3>
+        <p>· 反馈编号：{{advise.adviseId}}</p>
+        <p>· 投诉人：{{advise.proposer}}</p>
+        <p>· 联系方式：{{advise.contact}}</p>
+        <p>· 反馈内容：{{advise.content}}</p>
       </ion-item>
     </ion-list>
-
-    <div padding><button ion-button full>提交</button></div>
-  </div>
+  </ng-container>
 
 </ion-content>
