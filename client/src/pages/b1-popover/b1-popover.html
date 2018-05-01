@@ -1,0 +1,47 @@
+<ion-list radio-group [(ngModel)]="kind" (ionChange)="changeKind(kind)">
+  <ion-row>
+    <ion-col text-center>
+      <span>-- 过滤器 --</span>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col text-center>
+      <button ion-item detail-none (tap)="changeStatus('(-1)|[12]')">待处理</button>
+    </ion-col>
+    <ion-col text-center>
+      <button ion-item detail-none (tap)="changeStatus('3')">已处理</button>
+    </ion-col>
+  </ion-row>
+  <ion-item>
+    <ion-label>工程报修</ion-label>
+    <ion-radio value="工程报修"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>加班空调</ion-label>
+    <ion-radio value="加班空调"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>IC卡</ion-label>
+    <ion-radio value="IC卡"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>社区活动</ion-label>
+    <ion-radio value="社区活动"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>出闸纸申请</ion-label>
+    <ion-radio value="出闸纸申请"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>修补后加工程</ion-label>
+    <ion-radio value="修补后加工程"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>通信故障报修单</ion-label>
+    <ion-radio value="通信故障报修单"></ion-radio>
+  </ion-item>
+  <ion-item>
+    <ion-label>消防维保</ion-label>
+    <ion-radio value="消防维保"></ion-radio>
+  </ion-item>
+</ion-list>

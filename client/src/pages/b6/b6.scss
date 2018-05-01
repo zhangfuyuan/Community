@@ -1,0 +1,40 @@
+page-b6 {
+  .ion-content {
+    background-color: #F4F4F7;
+  }
+
+  .msg-box {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    align-items: flex-start;
+
+    &.end {
+      align-items: flex-end !important;
+    }
+  }
+
+  .msg-info, .msg-content {
+    margin: 0;
+  }
+
+  .msg-info {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    .sender {
+      color: #666;
+    }
+
+    .time {
+      color: #999;
+    }
+  }
+
+  .msg-content {
+    max-width: 300px;
+    background-color: #fff;
+    border: 1px solid rgba(7, 17, 27, 0.1);
+    border-radius: 5px;
+    padding: 1rem;
+  }
+}

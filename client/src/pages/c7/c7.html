@@ -1,0 +1,102 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>商家批量导入</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="导入列表">
+        导入列表
+      </ion-segment-button>
+      <ion-segment-button value="导入数据">
+        导入数据
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab center bottom *ngIf="pet !== '导入数据'" (tap)="pet='导入数据';">
+    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'导入列表'">
+      <ng-container *ngIf="addMerchantItems.length === 0">
+        <ion-item>
+          <p text-center>暂无导入！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="addMerchantItems.length > 0">
+        <ion-item *ngFor="let addMerchant of addMerchantItems; let i = index;">
+          <h2>{{addMerchant.name}}</h2>
+          <h3>{{addMerchant.community}}</h3>
+          <p>· 商家编号：{{addMerchant.merchantId}}</p>
+          <p>· 商家属性：{{addMerchant.attribute}}</p>
+          <p>· 商家权限：{{addMerchant.authority}}</p>
+          <p>· 备注：{{addMerchant.remark}}</p>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'导入数据'">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">商家编号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.merchantId"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">商家名称</ion-label>
+          <ion-input type="text" placeholder="请输入商家名称..." [(ngModel)]="form.name"></ion-input>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">所属社区</ion-label>
+          <ion-select [(ngModel)]="form.community"
+                      placeholder="请选择所属社区..."
+                      cancelText="取消"
+                      okText="确定">
+            <ion-option *ngFor="let community of communityNameItems; let i = index;" [value]="community">{{community}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">商家属性</ion-label>
+          <ion-select [(ngModel)]="form.attribute" placeholder="请选择商家属性..." cancelText="取消" okText="确定">
+            <ion-option value="属性1">属性1</ion-option>
+            <ion-option value="属性2">属性2</ion-option>
+            <ion-option value="属性3">属性3</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">商家权限</ion-label>
+          <ion-select [(ngModel)]="form.authority" placeholder="请选择商家权限..." cancelText="取消" okText="确定">
+            <ion-option value="权限1">权限1</ion-option>
+            <ion-option value="权限2">权限2</ion-option>
+            <ion-option value="权限3">权限3</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">备注</ion-label>
+          <ion-textarea placeholder="请输入备注内容..."
+                        class="textarea"
+                        [(ngModel)]="form.remark"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button
+                           full
+                           (tap)="postDetail()"
+                           [disabled]="form.name.trim().length===0">导入</button></div>
+    </div>
+  </div>
+
+</ion-content>

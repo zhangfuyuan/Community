@@ -1,0 +1,101 @@
+page-personal-info {
+  .navbar {
+    background: linear-gradient(to right bottom, #7eacfd, #488aff);
+  }
+
+  .title-box {
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    contain: content;
+    transform: translateZ(0);
+    padding: 4px;
+    min-height: 56px;
+  }
+
+  .ion-title>div {
+    color: #fff;
+  }
+
+  .msg-btn {
+    overflow: visible;
+    contain: none;
+    box-shadow: none;
+    color: #fff;
+  }
+
+  .msg-icon {
+    position: relative;
+    .msg-badge {
+      position: absolute;
+      right: -4px;
+      top: -8px;
+      font-size: 8px;
+      padding: 3px 5px;
+      border-radius: 50%;
+    }
+  }
+
+  #personalCont>.scroll-content {
+    transition: margin-top .5s ease-out;
+  }
+
+  .info {
+    transition: height .5s ease-out, transform .5s ease-out;
+    overflow: hidden;
+  }
+
+  .info-cont {
+    display: flex;
+  }
+
+  .avatar {
+    padding: 1rem 3rem 2rem 2rem;
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  .text {
+    padding: 1rem 0 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .login-btn, .nickname {
+    margin-bottom: 1rem;
+  }
+
+  .login-btn {
+    width: 50%;
+    span {
+      justify-content: space-around;
+    }
+  }
+
+  .tip, .nickname, .identity {
+    color: #fff;
+  }
+
+  .nickname {
+    font-size: 1.6rem;
+  }
+
+  .ion-content {
+    background-color: #F4F4F7;
+  }
+
+  .opacity-icon {
+    opacity: .5;
+  }
+
+  .login-logout {
+    margin: 1.6rem 0;
+  }
+
+}

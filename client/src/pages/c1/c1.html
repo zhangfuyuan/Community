@@ -1,0 +1,96 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>Banner维护</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="Banner列表">
+        Banner列表
+      </ion-segment-button>
+      <ion-segment-button value="Banner操作">
+        Banner操作
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="container" [ngSwitch]="pet">
+    <div *ngSwitchCase="'Banner列表'">
+      <ng-container *ngFor="let banner of bannerItems; let i = index;">
+        <ion-card margin-bottom [ngClass]="{ 'choose-card': i===curBannerIndex }" (tap)="editDetail(i, banner)">
+          <img [src]="'assets/imgs/home-' + banner.pictureId + '.jpg'" />
+          <ion-card-content>
+            <ion-card-title>
+              {{banner.title}}
+            </ion-card-title>
+            <p class="subtxt">{{banner.sendTime}} | {{banner.proposer}}</p>
+            <p>{{banner.content}}</p>
+          </ion-card-content>
+
+          <ion-row align-items-center>
+            <ion-col>
+              <button ion-button icon-left clear small>
+                <ion-icon name="thumbs-up"></ion-icon>
+                <div>12 喜欢</div>
+              </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-left clear small>
+                <ion-icon name="text"></ion-icon>
+                <div>4 评论</div>
+              </button>
+            </ion-col>
+            <ion-col center text-center>
+              <ion-note>
+                {{banner.agoDay < 0 ? 0 : banner.agoDay}}天 前
+              </ion-note>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ng-container>
+    </div>
+
+    <div class="form" *ngSwitchCase="'Banner操作'">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">Banner编号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.bannerId"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label ngClass="label disabled">发布者</ion-label>
+          <ion-input type="text" [value]="form.proposer" disabled="true"></ion-input>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">Banner图片</ion-label>
+          <ion-select [(ngModel)]="form.pictureId" cancelText="取消" okText="确定">
+            <ion-option value="ad-2">图片1</ion-option>
+            <ion-option value="ad-3">图片2</ion-option>
+            <ion-option value="ad-4">图片3</ion-option>
+            <ion-option value="ad-5">图片4</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label ngClass="label">Banner标题</ion-label>
+          <ion-input type="text" placeholder="请输入Banner的标题..." [(ngModel)]="form.title"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">Banner内容</ion-label>
+          <ion-textarea placeholder="请输入Banner的内容..." class="textarea" [(ngModel)]="form.content"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button full (tap)="postDetail()">发布</button></div>
+    </div>
+  </div>
+
+</ion-content>

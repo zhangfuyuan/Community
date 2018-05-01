@@ -1,0 +1,55 @@
+page-intel-property {
+  .ion-content {
+    background-color: #F4F4F7;
+  }
+
+  .msg-icon {
+    position: relative;
+    .msg-badge {
+      position: absolute;
+      right: -4px;
+      top: -8px;
+      font-size: 8px;
+      padding: 3px 5px;
+      border-radius: 50%;
+    }
+  }
+
+  .tool-box {
+    width: 100%;
+    .title {
+      padding: 10px;
+      color: #666;
+      font-size: 16px;
+    }
+  }
+
+  .tools {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    border-top: 1px solid rgba(7, 17, 27, 0.1);
+    border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+
+    &>a {
+      width: 33.3%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    span {
+      color: #333;
+    }
+  }
+
+  .easy-tools, .contact-tools {
+    padding: 1em 0;
+    &>div {
+      margin-bottom: 7px;
+    }
+  }
+
+}

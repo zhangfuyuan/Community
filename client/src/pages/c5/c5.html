@@ -1,0 +1,115 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>用户批量导入</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="导入列表">
+        导入列表
+      </ion-segment-button>
+      <ion-segment-button value="导入数据">
+        导入数据
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab center bottom *ngIf="pet !== '导入数据'" (tap)="pet = '导入数据';">
+    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-list *ngSwitchCase="'导入列表'">
+      <ng-container *ngIf="addUserItems.length === 0">
+        <ion-item>
+          <p text-center>暂无导入！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="addUserItems.length > 0">
+        <ion-item *ngFor="let addUser of addUserItems; let i = index;">
+          <h2>{{addUser.username}}</h2>
+          <h3>{{addUser.community}}</h3>
+          <p>· 用户编号：{{addUser.userid}}</p>
+          <p>· 默认密码：{{addUser.password}}</p>
+          <p>· 用户昵称：{{addUser.nickname}}</p>
+          <p>· 用户身份：{{addUser.identity}}</p>
+          <p>· 备注：{{addUser.remark}}</p>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'导入数据'">
+      <ion-list inset>
+        <ion-item>
+          <ion-label class="label disabled">用户编号</ion-label>
+          <ion-input type="text" disabled="true" [value]="form.userid"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">用户账号</ion-label>
+          <ion-input type="tel"
+                     pattern="[0-9]{11}"
+                     placeholder="请输入11位手机号码..."
+                     [(ngModel)]="form.username"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">默认密码</ion-label>
+          <ion-input type="text"
+                     pattern="[0-9]{6}"
+                     placeholder="请输入6位数字服务密码..."
+                     [(ngModel)]="form.password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">用户昵称</ion-label>
+          <ion-input type="text"
+                     placeholder="请输入用户昵称..."
+                     [(ngModel)]="form.nickname"></ion-input>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">用户身份</ion-label>
+          <ion-select [(ngModel)]="form.identity"
+                      placeholder="请选择用户身份..."
+                      cancelText="取消"
+                      okText="确定">
+            <ion-option value="user">普通用户</ion-option>
+            <ion-option value="manager">物业管理</ion-option>
+            <ion-option value="admin">管理员</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="kind-box">
+          <ion-label class="label">所属社区</ion-label>
+          <ion-select [(ngModel)]="form.community"
+                      placeholder="请选择所属社区..."
+                      cancelText="取消"
+                      okText="确定">
+            <ion-option *ngFor="let community of communityNameItems; let i = index;" [value]="community">{{community}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="label">备注</ion-label>
+          <ion-textarea placeholder="请输入备注内容..."
+                        class="textarea"
+                        [(ngModel)]="form.remark"></ion-textarea>
+        </ion-item>
+      </ion-list>
+
+      <div padding><button ion-button
+                           full
+                           (tap)="postDetail()"
+                           [disabled]="form.username.trim().length!==11 || form.password.trim().length!==6">导入</button></div>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,113 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>社区信息管理</ion-title>
+
+    <ion-buttons end *ngIf="pet !== '社区管理'">
+      <button ion-button icon-only (tap)="isHideSearchBox = false">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="社区列表">
+        社区列表
+      </ion-segment-button>
+      <ion-segment-button value="社区管理">
+        社区管理
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-fab center bottom *ngIf="pet !== '社区管理'" (tap)="changeAction('add')">
+    <button ion-fab color="primary"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-searchbar [(ngModel)]="searchValue"
+                   (ionChange)="getItems($event.value)"
+                   showCancelButton="true"
+                   placeholder="请输入搜索的社区名称..."
+                   (ionCancel)="isHideSearchBox = true"
+                   *ngIf="!isHideSearchBox && pet !== '社区管理'"></ion-searchbar>
+
+    <ion-list *ngSwitchCase="'社区列表'" radio-group [(ngModel)]="curCommunityIndex" (ionChange)="changeCurCommunity(curCommunityIndex, oldIndex)">
+      <ng-container *ngIf="communityItems.length === 0">
+        <ion-item>
+          <p text-center>暂无社区！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="communityItems.length > 0">
+        <ion-item *ngFor="let community of communityItems; let i = index;">
+          <ion-label>
+            <h2>{{community.name}}</h2>
+            <p>· 社区编号：{{community.communityId}}</p>
+            <p>· 社区属性：{{community.attribute}}</p>
+            <p>· 社区权限：{{community.authority}}</p>
+            <p>· 备注：{{community.remark}}</p>
+          </ion-label>
+          <ion-radio [value]="i"></ion-radio>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'社区管理'">
+      <ng-container *ngIf="!curCommunityDetail">
+        <p text-center>请选择需要管理的社区！</p>
+      </ng-container>
+
+      <ng-container *ngIf="curCommunityDetail">
+        <ion-list inset>
+          <ion-item>
+            <ion-label class="label disabled">社区编号</ion-label>
+            <ion-input type="text" disabled="true" [value]="form.communityId"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': action==='edit'}">社区名称</ion-label>
+            <ion-input type="text"
+                       placeholder="请输入社区名称..."
+                       [(ngModel)]="form.name"
+                       [disabled]="action==='edit'"></ion-input>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label class="label">社区属性</ion-label>
+            <ion-select [(ngModel)]="form.attribute" placeholder="请选择" cancelText="取消" okText="确定">
+              <ion-option value="属性1">属性1</ion-option>
+              <ion-option value="属性2">属性2</ion-option>
+              <ion-option value="属性3">属性3</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label class="label">权限设置</ion-label>
+            <ion-select [(ngModel)]="form.authority" placeholder="请选择" cancelText="取消" okText="确定">
+              <ion-option value="权限1">权限1</ion-option>
+              <ion-option value="权限2">权限2</ion-option>
+              <ion-option value="权限3">权限3</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label">备注</ion-label>
+            <ion-textarea placeholder="请输入备注..."
+                          class="textarea"
+                          [(ngModel)]="form.remark"></ion-textarea>
+          </ion-item>
+        </ion-list>
+
+        <div padding><button ion-button full (tap)="postDetail(action)">提交</button></div>
+      </ng-container>
+    </div>
+  </div>
+
+</ion-content>

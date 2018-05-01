@@ -1,0 +1,104 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title text-center>我的社区</ion-title>
+
+    <!-- A4：工单及公告消息红点提醒 -->
+    <ion-buttons end (tap)="switchPage('A4')">
+      <button ion-button icon-only>
+        <ion-icon class="msg-icon" name="mail">
+          <ion-badge class="msg-badge" color="danger">{{msgNum > 0 ? msgNum : ''}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <!-- 顶部广告 A1：在手机APP展示banner图片，点击后可查看banner详细页面 -->
+  <div class="banner">
+    <ion-slides pager="true" autoplay="3000" loop="true" effect="coverflow">
+      <ion-slide>
+        <img [src]="'assets/imgs/home-'+bannerItems[0].pictureId+'.jpg'" (tap)="switchPage('A1', bannerItems[0].bannerId)">
+      </ion-slide>
+      <ion-slide>
+        <img [src]="'assets/imgs/home-'+bannerItems[1].pictureId+'.jpg'" (tap)="switchPage('A1', bannerItems[1].bannerId)">
+      </ion-slide>
+      <ion-slide>
+        <img [src]="'assets/imgs/home-'+bannerItems[2].pictureId+'.jpg'" (tap)="switchPage('A1', bannerItems[2].bannerId)">
+      </ion-slide>
+      <ion-slide>
+        <img [src]="'assets/imgs/home-'+bannerItems[3].pictureId+'.jpg'" (tap)="switchPage('A1', bannerItems[3].bannerId)">
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- 导航 A2 + A3 + A5 -->
+  <div class="navbar" margin-top>
+    <ion-toolbar no-border-top>
+      <ion-segment [(ngModel)]="pet">
+        <ion-segment-button value="公告">
+          社区公告
+        </ion-segment-button>
+        <ion-segment-button value="新闻">
+          社区新闻
+        </ion-segment-button>
+        <ion-segment-button value="缴费">
+          缴费通知
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </div>
+
+  <!-- 导航正文内容 A2 + A3 + A5 -->
+  <div class="container" [ngSwitch]="pet">
+    <!-- A2：公告发送及管理，业主可在手机上查看物管发送的文字及图片公告 -->
+    <ion-list *ngSwitchCase="'公告'">
+      <ng-container *ngIf="!isLogin">
+        <ion-item>
+          <p text-center>请先登录！</p>
+          <div padding>
+            <button ion-button full large (tap)="switchPage('Entry')">登录</button>
+          </div>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="isLogin">
+        <ng-container *ngIf="noticeItems.length === 0">
+          <ion-item>
+            <p text-center >暂无相关公告！</p>
+          </ion-item>
+        </ng-container>
+
+        <ng-container *ngIf="noticeItems.length > 0">
+          <ion-item *ngFor="let item of noticeItems, let i = index" (tap)="switchPage('A2', item)">
+            <h2>{{item.title}}</h2>
+            <p>{{item.content}}</p>
+            <ion-note item-end>{{item.sendTime | date : 'MM-dd'}}</ion-note>
+          </ion-item>
+        </ng-container>
+      </ng-container>
+    </ion-list>
+
+    <!-- A3：新闻查看 -->
+    <ion-list *ngSwitchCase="'新闻'">
+      <ion-item *ngFor="let item of newsItems, let i = index">
+        <h2>{{item.title}}</h2>
+        <p>{{item.content}}</p>
+        <ion-note item-end>{{item.sendTime | date : 'MM-dd'}}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <!-- A5：社区物业缴费通知 -->
+    <ion-list *ngSwitchCase="'缴费'">
+      <ion-item *ngFor="let item of payItems, let i = index">
+        <h2>{{item.title}}</h2>
+        <p>{{item.content}}</p>
+        <ion-note item-end>{{item.sendTime | date : 'MM-dd'}}</ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>

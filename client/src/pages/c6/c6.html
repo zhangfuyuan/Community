@@ -1,0 +1,112 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>商家信息维护</ion-title>
+
+    <ion-buttons end *ngIf="pet !== '商家管理'">
+      <button ion-button icon-only (tap)="isHideSearchBox = false">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="商家列表">
+        商家列表
+      </ion-segment-button>
+      <ion-segment-button value="商家管理">
+        商家管理
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-searchbar [(ngModel)]="searchValue"
+                   (ionChange)="getItems($event.value)"
+                   showCancelButton="true"
+                   placeholder="请输入搜索内容..."
+                   (ionCancel)="isHideSearchBox = true"
+                   *ngIf="!isHideSearchBox && pet !== '商家管理'"></ion-searchbar>
+
+    <ion-list *ngSwitchCase="'商家列表'" radio-group [(ngModel)]="curMerchantIndex" (ionChange)="changeCurMerchant(curMerchantIndex, oldIndex)">
+      <ng-container *ngIf="merchantItems.length === 0">
+        <ion-item>
+          <p text-center>暂无商家！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="merchantItems.length > 0">
+        <ion-item *ngFor="let merchant of merchantItems; let i = index;">
+          <ion-label>
+            <h2>{{merchant.name}}</h2>
+            <p>· 商家编号：{{merchant.merchantId}}</p>
+            <p>· 所属社区：{{merchant.community}}</p>
+            <p>· 商家属性：{{merchant.attribute}}</p>
+            <p>· 商家权限：{{merchant.authority}}</p>
+            <p>· 备注：{{merchant.remark}}</p>
+          </ion-label>
+          <ion-radio [value]="i"></ion-radio>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'商家管理'">
+      <ng-container *ngIf="!curMerchantDetail">
+        <p text-center>请选择需要管理的用户！</p>
+      </ng-container>
+
+      <ng-container *ngIf="curMerchantDetail">
+        <ion-list inset>
+          <ion-item>
+            <ion-label class="label disabled">商家编号</ion-label>
+            <ion-input type="text" disabled="true" [value]="form.merchantId"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label">商家名称</ion-label>
+            <ion-input type="text" placeholder="请输入商家名称..." [(ngModel)]="form.name"></ion-input>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label class="label">所属社区</ion-label>
+            <ion-select [(ngModel)]="form.community"\placeholder="请选择所属社区..." cancelText="取消" okText="确定">
+              <ion-option *ngFor="let community of communityNameItems; let i = index;" [value]="community">{{community}}</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label class="label">商家属性</ion-label>
+            <ion-select [(ngModel)]="form.attribute" placeholder="请选择商家属性..." cancelText="取消" okText="确定">
+              <ion-option value="属性1">属性1</ion-option>
+              <ion-option value="属性2">属性2</ion-option>
+              <ion-option value="属性3">属性3</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label class="label">商家权限</ion-label>
+            <ion-select [(ngModel)]="form.authority" placeholder="请选择商家权限..." cancelText="取消" okText="确定">
+              <ion-option value="权限1">权限1</ion-option>
+              <ion-option value="权限2">权限2</ion-option>
+              <ion-option value="权限3">权限3</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label">备注</ion-label>
+            <ion-textarea placeholder="请输入备注内容..." class="textarea" [(ngModel)]="form.remark"></ion-textarea>
+          </ion-item>
+        </ion-list>
+
+        <div padding><button ion-button full (tap)="postDetail()">提交</button></div>
+      </ng-container>
+    </div>
+  </div>
+
+</ion-content>

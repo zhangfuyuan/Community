@@ -1,0 +1,17 @@
+page-a4 {
+  .ion-content {
+    background-color: #F4F4F7;
+  }
+
+  .msg-box {
+    border-radius: 0.5rem;
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .is-read {
+    background-color: rgba(255, 255, 255, .25);
+    color: #999;
+  }
+}

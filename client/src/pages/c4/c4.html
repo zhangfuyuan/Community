@@ -1,0 +1,81 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title *ngIf="isLogin">修改密码</ion-title>
+    <ion-title *ngIf="!isLogin">找回密码</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content [ngStyle]="{ 'background-color': isLogin ? '#fff' : '#F8F8F8' }">
+
+  <div *ngIf="isLogin">
+    <ion-list inset>
+      <ion-item>
+        <ion-label class="label">账号</ion-label>
+        <ion-input type="tel" pattern="[0-9]{11}"
+                   placeholder="请输入11位手机号码..."
+                   clearInput
+                   [(ngModel)]="form.editUsername"
+                   autocomplete="on"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="label">原始密码</ion-label>
+        <ion-input type="password"
+                   placeholder="请输入原始密码..."
+                   clearInput
+                   [(ngModel)]="form.editPwd"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="label">重置密码</ion-label>
+        <ion-input type="password"
+                   placeholder="请输入重置密码..."
+                   clearInput
+                   [(ngModel)]="form.editNewPwd"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="label">确认密码</ion-label>
+        <ion-input type="password"
+                   placeholder="请重新输入重置密码..."
+                   clearInput
+                   [(ngModel)]="form.editConfirmNewPwd"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <div padding>
+      <button ion-button
+              full
+              (tap)="editPwd(form)"
+              [disabled]="!form.editUsername || !form.editPwd || !form.editNewPwd || !form.editConfirmNewPwd">确认修改</button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLogin">
+    <ion-toolbar>
+      <ion-list inset>
+        <ion-item>
+          <ion-input type="tel"
+                     pattern="[0-9]{11}"
+                     placeholder="请输入11位手机号码"
+                     clearInput
+                     [(ngModel)]="form.findUsername"
+                     autocomplete="on"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-buttons end>
+        <button ion-button
+                color="primary"
+                outline
+                (tap)="findPwd(form.findUsername)"
+                [disabled]="findPwdTxt !== '找回密码'">{{findPwdTxt}}</button>
+      </ion-buttons>
+    </ion-toolbar>
+  </div>
+
+</ion-content>

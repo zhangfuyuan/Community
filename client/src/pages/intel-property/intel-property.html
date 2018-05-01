@@ -1,0 +1,79 @@
+
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title text-center>智慧物管</ion-title>
+
+    <!-- A4：工单及公告消息红点提醒 -->
+    <ion-buttons end (tap)="switchPage('A4')">
+      <button ion-button icon-only>
+        <ion-icon class="msg-icon" name="mail">
+          <ion-badge class="msg-badge" color="danger">{{msgNum > 0 ? msgNum : ''}}</ion-badge>
+        </ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="ion-content">
+  <!-- 便民工具 B1 + B2 + B3 + B4 + B5 + B9 -->
+  <div class="tool-box">
+    <div class="title" text-left>便民工具</div>
+
+    <div class="tools">
+      <a class="easy-tools" style="border-right: 1px solid rgba(7, 17, 27, 0.1);border-bottom: 1px solid rgba(7, 17, 27, 0.1);" (tap)="switchPage('B1')">
+        <div><img src="assets/imgs/nav0.png" width="64" height="64" alt="工单管理"></div>
+        <span>工单管理</span>
+      </a>
+
+      <a class="easy-tools" style="border-right: 1px solid rgba(7, 17, 27, 0.1);border-bottom: 1px solid rgba(7, 17, 27, 0.1);" (tap)="switchPage('B2')">
+        <div><img src="assets/imgs/nav1.png" width="64" height="64" alt="入驻申请"></div>
+        <span>入驻申请</span>
+      </a>
+
+      <a class="easy-tools" style="border-bottom: 1px solid rgba(7, 17, 27, 0.1);" (tap)="switchPage('B3')">
+        <div><img src="assets/imgs/nav2.png" width="64" height="64" alt="装修申请"></div>
+        <span>装修申请</span>
+      </a>
+
+      <a class="easy-tools" style="border-right: 1px solid rgba(7, 17, 27, 0.1);" (tap)="switchPage('B4')">
+        <div><img src="assets/imgs/nav5.png" width="64" height="64" alt="客户续约"></div>
+        <span>客户续约</span>
+      </a>
+
+      <a class="easy-tools" style="border-right: 1px solid rgba(7, 17, 27, 0.1);" (tap)="switchPage('B5')">
+        <div><img src="assets/imgs/nav5.png" width="64" height="64" alt="客户退租"></div>
+        <span>客户退租</span>
+      </a>
+
+      <a class="easy-tools" (tap)="switchPage('B9')">
+        <div><img src="assets/imgs/nav3.png" width="64" height="64" alt="会议室申请"></div>
+        <span>会议室申请</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 交流工具 B6 + B7 + B8 -->
+  <div class="tool-box">
+    <div class="title">交流工具</div>
+
+    <div class="tools">
+      <a class="contact-tools" (tap)="switchPage('B6')">
+        <div><img src="assets/imgs/nav4.png" width="64" height="64" alt="在线客服"></div>
+        <span>在线客服</span>
+      </a>
+
+      <a class="contact-tools" (tap)="switchPage('B7')">
+        <div><img src="assets/imgs/nav6.png" width="64" height="64" alt="意见反馈"></div>
+        <span>意见反馈</span>
+      </a>
+
+      <a class="contact-tools" (tap)="switchPage('B8')">
+        <div><img src="assets/imgs/nav7.png" width="64" height="64" alt="联系我们"></div>
+        <span>联系我们</span>
+      </a>
+    </div>
+  </div>
+</ion-content>

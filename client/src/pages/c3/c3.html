@@ -1,0 +1,122 @@
+
+<ion-header class="ion-header">
+
+  <ion-navbar>
+    <ion-title>用户信息维护</ion-title>
+
+    <ion-buttons end *ngIf="pet !== '用户管理'">
+      <button ion-button icon-only (tap)="isHideSearchBox = false">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="pet">
+      <ion-segment-button value="用户列表">
+        用户列表
+      </ion-segment-button>
+      <ion-segment-button value="用户管理">
+        用户管理
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="container" [ngSwitch]="pet">
+    <ion-searchbar [(ngModel)]="searchValue"
+                   (ionChange)="getItems($event.value)"
+                   showCancelButton="true"
+                   placeholder="请输入搜索内容..."
+                   (ionCancel)="isHideSearchBox = true"
+                   *ngIf="!isHideSearchBox && pet !== '用户管理'"></ion-searchbar>
+
+    <ion-list *ngSwitchCase="'用户列表'" radio-group [(ngModel)]="curUserIndex" (ionChange)="changeCurUser(curUserIndex, oldIndex)">
+      <ng-container *ngIf="userItems.length === 0">
+        <ion-item>
+          <p text-center>暂无用户！</p>
+        </ion-item>
+      </ng-container>
+
+      <ng-container *ngIf="userItems.length > 0">
+        <ion-item *ngFor="let user of userItems; let i = index;">
+          <ion-label>
+            <h2>{{user.username}}</h2>
+            <p>· 用户编号：{{user.userid}}</p>
+            <p>· 用户昵称：{{user.nickname}}</p>
+            <p>· 用户身份：{{user.identity}}</p>
+            <p>· 所属社区：{{user.community}}</p>
+            <p>· 备注：{{user.remark}}</p>
+          </ion-label>
+          <ion-radio [value]="i"></ion-radio>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <div class="form" *ngSwitchCase="'用户管理'">
+      <ng-container *ngIf="!curUserDetail">
+        <p text-center>请选择需要管理的用户！</p>
+      </ng-container>
+
+      <ng-container *ngIf="curUserDetail">
+        <ion-list inset>
+          <ion-item>
+            <ion-label class="label disabled">用户编号</ion-label>
+            <ion-input type="text" disabled="true" [value]="form.userid"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label class="label disabled">用户账号</ion-label>
+            <ion-input type="text" [value]="form.username" disabled="true"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity==='admin' }">用户昵称</ion-label>
+            <ion-input type="text"
+                       placeholder="请输入用户昵称..."
+                       [(ngModel)]="form.nickname"
+                       [disabled]="global.userInfo.identity==='admin'"></ion-input>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='admin' }">用户身份</ion-label>
+            <ion-select [(ngModel)]="form.identity"
+                        placeholder="请选择用户身份..."
+                        cancelText="取消"
+                        okText="确定"
+                        [disabled]="global.userInfo.identity!=='admin'">
+              <ion-option value="user">普通用户</ion-option>
+              <ion-option value="manager">物业管理</ion-option>
+              <ion-option value="admin">管理员</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item class="kind-box">
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity!=='admin' }">所属社区</ion-label>
+            <ion-select [(ngModel)]="form.community"
+                        placeholder="请选择所属社区..."
+                        cancelText="取消"
+                        okText="确定"
+                        [disabled]="global.userInfo.identity!=='admin'">
+              <ion-option *ngFor="let community of communityNameItems; let i = index;" [value]="community">{{community}}</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label [ngClass]="{ 'label': true, 'disabled': global.userInfo.identity==='admin' }">备注</ion-label>
+            <ion-textarea placeholder="请输入备注内容..."
+                          class="textarea"
+                          [(ngModel)]="form.remark"
+                          [disabled]="global.userInfo.identity==='admin'"></ion-textarea>
+          </ion-item>
+        </ion-list>
+
+        <div padding><button ion-button full (tap)="postDetail()">提交</button></div>
+      </ng-container>
+    </div>
+  </div>
+
+</ion-content>
