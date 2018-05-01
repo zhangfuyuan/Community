@@ -304,3 +304,85 @@
   
   [《express 如何解决413 请求实体过长?》](https://cnodejs.org/topic/53db0ca3111cfedf0b72aaeb)
   
+### （三）利用WebSocket实现聊天室功能
+
+1. 方法一：`Socket.IO` （推荐）
+
+    >1. 下载模块：
+    ```
+    
+    ```
+
+2. 方法二：`express-ws` （不推荐）
+
+    >1. 下载 `express-ws` 模块
+    ```
+        npm install --save express-ws
+    ```    
+    >2. 在 `www` 新建 `express-ws` 设置模块
+    
+    ```
+        /**
+         * WebSocket router
+         */
+        var express = require('express');
+        var expressWS = require('express-ws');
+        var wsRouter = null;
+        
+        class WSRouter {
+        
+            constructor(server) {
+                this.server = server;
+                this.app = express();
+                this.wsInstance = expressWS(this.app, this.server);
+                this.msgItems = [];
+                this.clients = [];
+            }
+        
+           lintenClientConnect() {
+                this.app.ws('/ws', (ws, req) => {
+                    console.log('One client connect to WSServer successful');
+                    this.clients = this.wsInstance.getWss('/ws').clients;
+        
+                    ws.on('message', (msg) => {
+                        console.log('WSServer receive client msg :', msg);
+        
+                        this.msgItems.push(JSON.parse(msg));
+                        this.clients.forEach((client) => {
+                            client.send(JSON.stringify(this.msgItems));
+                        });
+                    });
+        
+                    ws.on('close', () => {
+                        console.log("One client is closed");
+        
+                        this.clients = this.wsInstance.getWss('/ws').clients;
+                    });
+                });
+            }
+        
+        }
+        
+        function init(server){
+            if(wsRouter === null && server !== null){
+                wsRouter = new WSRouter(server);
+            }
+            return wsRouter;
+        }
+        
+        module.exports = init;
+    ```   
+    >3. 引入 `www` 文件：
+    ```
+        ...
+        var server = http.createServer(app);
+        var wsRouter = require('./socketBase')(server);
+        wsRouter.lintenClientConnect();
+    ```
+
+* 参考：
+  [《WebSocket 教程》](http://www.ruanyifeng.com/blog/2017/05/websocket.html)
+  [服务端：express-ws github 源代码](https://github.com/HenningM/express-ws) 
+  [客户端：《Angular4-在线竞拍应用-与服务器通信》](https://blog.csdn.net/zsx157326/article/details/78410128)
+  [正确使用express-ws：《Express Websocket使用》](https://www.jianshu.com/p/136da96d3d48)
+  

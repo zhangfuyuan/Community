@@ -133,7 +133,15 @@ router.post('/remove_notice', function(req, res, next) {
 router.post('/edit_notice', function(req, res, next) {
     let reqDetail = req.body.detail;
 
-    NoticeModel.updateOne({ "noticeId": reqDetail["noticeId"] }, reqDetail, function(err, doc){
+    NoticeModel.updateOne({ "noticeId": reqDetail["noticeId"] }, {
+        "noticeId" : 'c' + Date.now(),
+        "sendTime" : reqDetail["sendTime"],
+        "publisher" : reqDetail["publisher"],
+        "title" : reqDetail["title"],
+        "content" : reqDetail["content"],
+        "picture" : reqDetail["picture"],
+        "community" : reqDetail["community"]
+    }, function(err, doc){
         if (err) {
             return res.json({
                 status: 500,
@@ -153,9 +161,9 @@ router.post('/edit_notice', function(req, res, next) {
 
 /* GET Banner详情 */
 router.get('/banner', function(req, res, next) {
-    let reqPictureId = req.query.pictureId;
+    let reqBannerId = req.query.bannerId;
 
-    BannerModel.findOne({ "pictureId": reqPictureId }, function (err, doc) {
+    BannerModel.findOne({ "bannerId": reqBannerId }, function (err, doc) {
         if (err) {
             return res.json({
                 status: 500,
@@ -174,6 +182,44 @@ router.get('/banner', function(req, res, next) {
             status: 200,
             msg: "获取Banner详情成功",
             data: doc
+        })
+    });
+});
+
+/* GET Banner详情 */
+router.get('/bannerItems', function(req, res, next) {
+    BannerModel.find().exec(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "获取Banner列表成功",
+            data: doc
+        })
+    });
+});
+
+/* GET Banner详情 */
+router.post('/edit_banner', function(req, res, next) {
+    let reqDetail = req.body.detail;
+
+    BannerModel.updateOne({ "bannerId": reqDetail["bannerId"] }, reqDetail, function(err, doc){
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "发布Banner成功",
+            data: reqDetail
         })
     });
 });
@@ -475,7 +521,10 @@ router.post('/edit_application', function(req, res, next) {
 router.post('/approve_application', function(req, res, next) {
     let reqApplicationId = req.body.applicationId,
         reqReply = req.body.reply,
-        reqReplier = req.body.replier;
+        reqReplier = req.body.replier,
+        reqKind = req.body.kind,
+        reqProposer = req.body.proposer,
+        reqEnterCommunity = req.body.enterCommunity;
 
     ApplicationModel.updateOne({ "applicationId": reqApplicationId }, { "status": reqReply, "approver": reqReplier }, function(err, doc){
         if (err) {
@@ -485,10 +534,34 @@ router.post('/approve_application', function(req, res, next) {
             });
         }
 
-        res.json({
-            status: 200,
-            msg: "审批一条申请成功"
-        })
+        if (reqKind !== '入驻申请') {
+            return res.json({
+                status: 200,
+                msg: "审批一条申请成功"
+            })
+        }
+
+        UserModel.updateOne({ "username": reqProposer }, { "community": reqEnterCommunity }, (uErr, uDoc)=>{
+            if (uErr) {
+                return res.json({
+                    status: 500,
+                    msg: uErr.message
+                });
+            }
+
+            /* 找不到更新对象 */
+            if (uDoc.nModified === 0) {
+                return res.json({
+                    status: 404,
+                    msg: "信息不正确"
+                });
+            }
+
+            res.json({
+                status: 200,
+                msg: "审批一条申请成功"
+            });
+        });
     });
 });
 
@@ -530,6 +603,128 @@ router.post('/add_advise', function(req, res, next) {
         res.json({
             status: 200,
             msg: "提交建议成功",
+            data: doc
+        })
+    });
+});
+
+/******************************************************* 社区类 *******************************************************/
+
+/* GET 社区列表 */
+router.get('/community', function(req, res, next) {
+    CommunityModel.find({}).sort({ "communityId": -1 }).exec(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "获取社区列表成功",
+            data: doc
+        })
+    });
+});
+
+/* POST 申请 - 增：new + save() -> doc返回对象 */
+router.post('/add_community', function(req, res, next) {
+    let reqDetail = req.body.detail,
+        communityModel = new CommunityModel(reqDetail);
+
+    communityModel.save(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "新增一个社区成功",
+            data: doc
+        });
+    });
+});
+
+/* POST 申请 - 改：update()/updateOne() -> 200：{n: 1, nModified: 1, ok: 1} 404：{ n: 0, nModified: 0, ok: 1 } */
+router.post('/edit_community', function(req, res, next) {
+    let reqDetail = req.body.detail;
+
+    CommunityModel.updateOne({ "communityId": reqDetail["communityId"] }, reqDetail, function(err, doc){
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "修改社区信息成功",
+            data: reqDetail
+        });
+    });
+});
+
+/******************************************************* 商家类 *******************************************************/
+
+/* GET 商家列表 */
+router.get('/merchant', function(req, res, next) {
+    MerchantModel.find({}).sort({ "merchantId": -1 }).exec(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "获取商家列表成功",
+            data: doc
+        })
+    });
+});
+
+/* POST 管理 - 改：update()/updateOne() -> 200：{n: 1, nModified: 1, ok: 1} 404：{ n: 0, nModified: 0, ok: 1 } */
+router.post('/edit_merchant', function(req, res, next) {
+    let reqDetail = req.body.detail;
+
+    MerchantModel.updateOne({ "merchantId": reqDetail["merchantId"] }, reqDetail, function(err, doc){
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "修改商家信息成功",
+            data: reqDetail
+        });
+    });
+});
+
+/* POST 商家 - 增：new + save() -> doc返回对象 */
+router.post('/add_merchant', function(req, res, next) {
+    let reqDetail = req.body.detail,
+        merchantModel = new MerchantModel(reqDetail);
+
+    merchantModel.save(function (err, doc) {
+        if (err) {
+            return res.json({
+                status: 500,
+                msg: err.message
+            });
+        }
+
+        res.json({
+            status: 200,
+            msg: "导入新商家成功",
             data: doc
         })
     });
